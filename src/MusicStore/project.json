@@ -57,7 +57,11 @@
     "web": "MusicStore"
   },
   "frameworks": {
-    "net451": {},
+    "net451": {
+      "dependencies": {
+        "Microsoft.Extensions.Logging.EventLog": "1.0.0-*"
+      }
+    },
     "netstandardapp1.5": {
       "dependencies": {
         "NETStandard.Library": "1.5.0-*"

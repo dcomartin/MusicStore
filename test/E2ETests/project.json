@@ -27,6 +27,14 @@
         "dnxcore50",
         "portable-net451+win8"
       ]
+    },
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
+      },
+      "dependencies": {
+        "xunit.runner.console": "2.1.0"
+      }
     }
   },
   "testRunner": "xunit"

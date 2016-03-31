@@ -123,9 +123,8 @@ namespace E2ETests
         [OSSkipCondition(OperatingSystems.Linux)]
         [SkipIfCurrentRuntimeIsCoreClr]
         [SkipIfIISVariationsNotEnabled]
-        //[InlineData(ServerType.IIS, RuntimeFlavor.Clr, RuntimeArchitecture.x86, "http://localhost:5015/")]
-        [InlineData(ServerType.IIS, RuntimeFlavor.CoreClr, RuntimeArchitecture.x64, "http://localhost:5016/")]
-        public async Task SmokeTestSuite_On_IIS_X86(
+        [InlineData(ServerType.IIS, RuntimeFlavor.Clr, RuntimeArchitecture.x64, "http://localhost:5015/")]
+        public async Task Test(
             ServerType serverType,
             RuntimeFlavor runtimeFlavor,
             RuntimeArchitecture architecture,
@@ -141,7 +140,7 @@ namespace E2ETests
             _logger.Dispose();
         }
     }
-
+    
     public class SmokeTests
     {
         private ILogger _logger;

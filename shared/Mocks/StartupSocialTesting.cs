@@ -48,7 +48,7 @@ namespace MusicStore
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             //Sql client not available on mono
-            var useInMemoryStore = !_runtimeEnvironment.OperatingSystem.Equals("Windows", StringComparison.OrdinalIgnoreCase);
+            var useInMemoryStore = Configuration.GetValue<bool>("UseInMemoryDatabase") || !_runtimeEnvironment.OperatingSystem.Equals("Windows", StringComparison.OrdinalIgnoreCase);
 
             // Add EF services to the services container
             if (useInMemoryStore)
@@ -103,6 +103,9 @@ namespace MusicStore
         {
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
+#if NET451
+            loggerFactory.AddEventLog(LogLevel.Warning);
+#endif
             app.UseStatusCodePagesWithRedirects("~/Home/StatusCodePage");
 
             // Error page middleware displays a nice formatted HTML page for any unhandled exceptions in the request pipeline.
