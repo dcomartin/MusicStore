@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -187,7 +187,7 @@ namespace E2ETests
             {
                 Assert.Contains("<title>Log in – ASP.NET MVC Music Store</title>", responseContent, StringComparison.OrdinalIgnoreCase);
                 Assert.Contains("<h4>Use a local account to log in.</h4>", responseContent, StringComparison.OrdinalIgnoreCase);
-                Assert.Equal<string>(_deploymentResult.ApplicationBaseUri + PrefixBaseAddress("Account/Login?ReturnUrl=%2F{0}%2FAdmin%2FStoreManager%2F"), response.RequestMessage.RequestUri.AbsoluteUri);
+                Assert.Equal<string>(_deploymentResult.ApplicationBaseUri + PrefixBaseAddress("Account/Login?ReturnUrl=%2F{0}%2Fadmin%2FstoreManager%2F"), response.RequestMessage.RequestUri.AbsoluteUri);
                 _logger.LogInformation("Redirected to login page as expected.");
             }
             else
