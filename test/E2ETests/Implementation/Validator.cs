@@ -179,7 +179,7 @@ namespace E2ETests
         public async Task AccessStoreWithoutPermissions(string email = null)
         {
             _logger.LogInformation("Trying to access StoreManager that needs ManageStore claim with the current user : {email}", email ?? "Anonymous");
-            var response = await DoGetAsync("Admin/StoreManager/");
+            var response = await DoGetAsync("admin/storeManager/");
             var responseContent = await response.Content.ReadAsStringAsync();
             ValidateLayoutPage(responseContent);
 
