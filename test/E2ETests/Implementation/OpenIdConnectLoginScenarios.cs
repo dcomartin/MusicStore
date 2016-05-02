@@ -42,6 +42,7 @@ namespace E2ETests
             Assert.NotNull(_httpClientHandler.CookieContainer.GetCookies(new Uri(_deploymentResult.ApplicationBaseUri)).GetCookieWithName(".AspNetCore.OpenIdConnect.Nonce.protectedString"));
 
             // This is just enable the auto-redirect.
+            _httpClient.Dispose();
             _httpClientHandler = new HttpClientHandler();
             _httpClient = new HttpClient(_httpClientHandler) { BaseAddress = new Uri(_deploymentResult.ApplicationBaseUri) };
             foreach (var header in Microsoft.Net.Http.Headers.SetCookieHeaderValue.ParseList(response.Headers.GetValues("Set-Cookie").ToList()))
@@ -100,6 +101,7 @@ namespace E2ETests
 
             content = new FormUrlEncodedContent(formParameters.ToArray());
             // Need a non-redirecting handler
+            _httpClient.Dispose();
             var handler = new HttpClientHandler() { AllowAutoRedirect = false };
             handler.CookieContainer.Add(new Uri(_deploymentResult.ApplicationBaseUri), _httpClientHandler.CookieContainer.GetCookies(new Uri(_deploymentResult.ApplicationBaseUri)));
             _httpClient = new HttpClient(handler) { BaseAddress = new Uri(_deploymentResult.ApplicationBaseUri) };
@@ -115,6 +117,7 @@ namespace E2ETests
             response = await DoGetAsync(queryItems["post_logout_redirect_uri"]);
             responseContent = await response.Content.ReadAsStringAsync();
             Assert.Contains("Log in", responseContent);
+            _httpClient.Dispose();
         }
     }
 }

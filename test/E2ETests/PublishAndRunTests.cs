@@ -166,35 +166,37 @@ namespace E2ETests
                 {
                     var deploymentResult = deployer.Deploy();
                     var httpClientHandler = new HttpClientHandler() { UseDefaultCredentials = true };
-                    var httpClient = new HttpClient(httpClientHandler);
-                    httpClient.BaseAddress = new Uri(deploymentResult.ApplicationBaseUri);
-
-                    // Request to base address and check if various parts of the body are rendered &
-                    // measure the cold startup time.
-                    // Add retry logic since tests are flaky on mono due to connection issues
-                    var response = await RetryHelper.RetryRequest(async () => await httpClient.GetAsync(string.Empty), logger: _logger, cancellationToken: deploymentResult.HostShutdownToken);
-
-                    Assert.False(response == null, "Response object is null because the client could not " +
-                        "connect to the server after multiple retries");
-
-                    var validator = new Validator(httpClient, httpClientHandler, _logger, deploymentResult);
-
-                    Console.WriteLine("Verifying home page");
-                    await validator.VerifyHomePage(response);
-
-                    Console.WriteLine("Verifying static files are served from static file middleware");
-                    await validator.VerifyStaticContentServed();
-
-                    if (serverType != ServerType.IISExpress)
+                    using (var httpClient = new HttpClient(httpClientHandler))
                     {
-                        if (Directory.GetFiles(
-                            deploymentParameters.ApplicationPath, "*.cmd", SearchOption.TopDirectoryOnly).Length > 0)
-                        {
-                            throw new Exception("publishExclude parameter values are not honored.");
-                        }
-                    }
+                        httpClient.BaseAddress = new Uri(deploymentResult.ApplicationBaseUri);
 
-                    _logger.LogInformation("Variation completed successfully.");
+                        // Request to base address and check if various parts of the body are rendered &
+                        // measure the cold startup time.
+                        // Add retry logic since tests are flaky on mono due to connection issues
+                        var response = await RetryHelper.RetryRequest(async () => await httpClient.GetAsync(string.Empty), logger: _logger, cancellationToken: deploymentResult.HostShutdownToken);
+
+                        Assert.False(response == null, "Response object is null because the client could not " +
+                            "connect to the server after multiple retries");
+
+                        var validator = new Validator(httpClient, httpClientHandler, _logger, deploymentResult);
+
+                        Console.WriteLine("Verifying home page");
+                        await validator.VerifyHomePage(response);
+
+                        Console.WriteLine("Verifying static files are served from static file middleware");
+                        await validator.VerifyStaticContentServed();
+
+                        if (serverType != ServerType.IISExpress)
+                        {
+                            if (Directory.GetFiles(
+                                deploymentParameters.ApplicationPath, "*.cmd", SearchOption.TopDirectoryOnly).Length > 0)
+                            {
+                                throw new Exception("publishExclude parameter values are not honored.");
+                            }
+                        }
+
+                        _logger.LogInformation("Variation completed successfully.");
+                    }
                 }
             }
         }

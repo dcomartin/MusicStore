@@ -60,26 +60,27 @@ namespace E2ETests
                 {
                     var deploymentResult = deployer.Deploy();
                     var httpClientHandler = new HttpClientHandler() { UseDefaultCredentials = true };
-                    var httpClient = new HttpClient(httpClientHandler) { BaseAddress = new Uri(deploymentResult.ApplicationBaseUri) };
-
-                    // Request to base address and check if various parts of the body are rendered & measure the cold startup time.
-                    var response = await RetryHelper.RetryRequest(async () =>
+                    using (var httpClient = new HttpClient(httpClientHandler) { BaseAddress = new Uri(deploymentResult.ApplicationBaseUri) })
                     {
-                        return await httpClient.GetAsync(string.Empty);
-                    }, logger: _logger, cancellationToken: deploymentResult.HostShutdownToken);
+                        // Request to base address and check if various parts of the body are rendered & measure the cold startup time.
+                        var response = await RetryHelper.RetryRequest(async () =>
+                        {
+                            return await httpClient.GetAsync(string.Empty);
+                        }, logger: _logger, cancellationToken: deploymentResult.HostShutdownToken);
 
-                    Assert.False(response == null, "Response object is null because the client could not " +
-                        "connect to the server after multiple retries");
+                        Assert.False(response == null, "Response object is null because the client could not " +
+                            "connect to the server after multiple retries");
 
-                    var validator = new Validator(httpClient, httpClientHandler, _logger, deploymentResult);
+                        var validator = new Validator(httpClient, httpClientHandler, _logger, deploymentResult);
 
-                    Console.WriteLine("Verifying home page");
-                    await validator.VerifyNtlmHomePage(response);
+                        Console.WriteLine("Verifying home page");
+                        await validator.VerifyNtlmHomePage(response);
 
-                    Console.WriteLine("Verifying access to store with permissions");
-                    await validator.AccessStoreWithPermissions();
+                        Console.WriteLine("Verifying access to store with permissions");
+                        await validator.AccessStoreWithPermissions();
 
-                    _logger.LogInformation("Variation completed successfully.");
+                        _logger.LogInformation("Variation completed successfully.");
+                    }
                 }
             }
         }

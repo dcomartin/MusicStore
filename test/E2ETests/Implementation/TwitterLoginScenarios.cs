@@ -41,6 +41,7 @@ namespace E2ETests
             Assert.NotNull(_httpClientHandler.CookieContainer.GetCookies(new Uri(_deploymentResult.ApplicationBaseUri))["__TwitterState"]);
 
             //This is just to generate a correlation cookie. Previous step would generate this cookie, but we have reset the handler now.
+            _httpClient.Dispose();
             _httpClientHandler = new HttpClientHandler();
             _httpClient = new HttpClient(_httpClientHandler) { BaseAddress = new Uri(_deploymentResult.ApplicationBaseUri) };
 
@@ -93,6 +94,7 @@ namespace E2ETests
             //This action requires admin permissions. If events are fired this permission is granted
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             _logger.LogInformation("Middleware events were fired successfully");
+            _httpClient.Dispose();
         }
     }
 }

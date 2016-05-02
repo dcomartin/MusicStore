@@ -46,6 +46,7 @@ namespace E2ETests
                 .Where(cookie => cookie.Name.StartsWith(".AspNetCore.Correlation.Facebook")));
 
             //This is just to generate a correlation cookie. Previous step would generate this cookie, but we have reset the handler now.
+            _httpClient.Dispose();
             _httpClientHandler = new HttpClientHandler();
             _httpClient = new HttpClient(_httpClientHandler) { BaseAddress = new Uri(_deploymentResult.ApplicationBaseUri) };
 
@@ -97,6 +98,7 @@ namespace E2ETests
             //This action requires admin permissions. If events are fired this permission is granted
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             _logger.LogInformation("Middleware events were fired successfully");
+            _httpClient.Dispose();
         }
     }
 }
