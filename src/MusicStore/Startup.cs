@@ -1,12 +1,14 @@
+using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.PlatformAbstractions;
 using MusicStore.Components;
 using MusicStore.Models;
 
@@ -36,6 +38,10 @@ namespace MusicStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
 
             // Add EF services to the services container
             if (_platform.UseInMemoryStore)
@@ -69,8 +75,9 @@ namespace MusicStore
             services.AddLogging();
 
             // Add MVC services to the services container
-            services.AddMvc();
-
+            services.AddMvc()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
             // Add memory cache services
             services.AddMemoryCache();
             services.AddDistributedMemoryCache();
@@ -98,7 +105,18 @@ namespace MusicStore
         public void ConfigureDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(minLevel: LogLevel.Information);
-
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = new List<CultureInfo>()
+                    {
+                        new CultureInfo("fr-FR")
+                    },
+                SupportedUICultures = new List<CultureInfo>()
+                    {
+                        new CultureInfo("fr-FR")
+                    }
+            });
             // StatusCode pages to gracefully handle status codes 400-599.
             app.UseStatusCodePagesWithRedirects("~/Home/StatusCodePage");
 
@@ -117,6 +135,18 @@ namespace MusicStore
         {
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = new List<CultureInfo>()
+                    {
+                        new CultureInfo("fr-FR")
+                    },
+                SupportedUICultures = new List<CultureInfo>()
+                    {
+                        new CultureInfo("fr-FR")
+                    }
+            });
             // StatusCode pages to gracefully handle status codes 400-599.
             app.UseStatusCodePagesWithRedirects("~/Home/StatusCodePage");
 

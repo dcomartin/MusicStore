@@ -7,13 +7,14 @@
   "buildOptions": {
     "compile": {
       "include": [
-        "../../shared/**/*.cs" 
+        "../../shared/**/*.cs"
       ]
     },
     "copyToOutput": {
       "include": [
         "Areas",
         "Views",
+        "Resources",
         "wwwroot",
         "config.json",
         "web.config"
@@ -46,6 +47,7 @@
     "Microsoft.AspNetCore.Diagnostics": "1.0.0-*",
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0-*",
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0-*",
+    "Microsoft.AspNetCore.Localization": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0-*",

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Server;
@@ -15,6 +16,7 @@ namespace MusicStore
                 .Build();
 
             var builder = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseConfiguration(config)
                 .UseIISIntegration()
                 .UseStartup("MusicStore");
