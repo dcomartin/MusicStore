@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MusicStore.Resources {
+namespace MusicStore.Resources.Models {
     using System;
     using System.Reflection;
     
@@ -22,13 +22,13 @@ namespace MusicStore.Resources {
     // with the /str option, or rebuild your VS project.
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Models_LoginViewModel_fr_FR {
+    public class LoginViewModel_fr_FR {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
-        internal Models_LoginViewModel_fr_FR() {
+        internal LoginViewModel_fr_FR() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace MusicStore.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MusicStore.Models.LoginViewModel-fr-FR", typeof(Models_LoginViewModel_fr_FR).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MusicStore.LoginViewModel-fr-FR", typeof(LoginViewModel_fr_FR).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

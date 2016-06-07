@@ -110,10 +110,12 @@ namespace MusicStore
                 DefaultRequestCulture = new RequestCulture("en-US"),
                 SupportedCultures = new List<CultureInfo>()
                     {
+                        new CultureInfo("en-US"),
                         new CultureInfo("fr-FR")
                     },
                 SupportedUICultures = new List<CultureInfo>()
                     {
+                        new CultureInfo("en-US"),
                         new CultureInfo("fr-FR")
                     }
             });
@@ -171,6 +173,21 @@ namespace MusicStore
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = new List<CultureInfo>()
+                    {
+                        new CultureInfo("en-US"),
+                        new CultureInfo("fr-FR")
+                    },
+                SupportedUICultures = new List<CultureInfo>()
+                    {
+                        new CultureInfo("en-US"),
+                        new CultureInfo("fr-FR")
+                    }
+            });
+
             // Configure Session.
             app.UseSession();
 
