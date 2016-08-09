@@ -1,28 +1,19 @@
-default BASE_DIR_LOCAL='${Directory.GetCurrentDirectory()}'
-default IgnoreDotnetTestExitCode = '${E("KOREBUILD_IGNORE_DOTNET_TEST_EXIT_CODE") == "true"}'
-default Configuration='${E("Configuration")}'
-
 use-standard-lifecycle
 k-standard-goals
 
 #run-nano-tests .compile
     @{
-        var e2eTestsDirectory = Path.Combine(BASE_DIR_LOCAL, "test", "E2ETests");
+        var configuration = Environment.GetEnvironmentVariable("Configuration");
+        if (string.IsNullOrEmpty(configuration))
+        {
+            configuration = "Debug";
+        }
+
+        var e2eTestsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "test", "E2ETests");
         var testArgs = "";
-        testArgs += " --configuration " + Configuration;
+        testArgs += " --configuration " + configuration;
         testArgs += " -trait E2ETests=NanoServer";
         testArgs += " -parallel none";
 
-        try
-        {
-            Dotnet("test" + testArgs, e2eTestsDirectory);
-        }
-        catch
-        {
-            if (!IgnoreDotnetTestExitCode)
-            {
-                // Ignore dotnet-test exit code if KOREBUILD_IGNORE_DOTNET_TEST_EXIT_CODE is set.
-                throw;
-            }
-        }
+        Dotnet("test" + testArgs, e2eTestsDirectory);
     }
