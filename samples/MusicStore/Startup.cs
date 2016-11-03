@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -6,7 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MusicStore.Components;
+using MusicStore.Features;
 using MusicStore.Models;
+using MusicStore.ViewModels;
+using System.Reflection;
 
 namespace MusicStore
 {
@@ -55,6 +59,7 @@ namespace MusicStore
                     .AddEntityFrameworkStores<MusicStoreContext>()
                     .AddDefaultTokenProviders();
 
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
             services.AddCors(options =>
             {

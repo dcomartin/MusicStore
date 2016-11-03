@@ -166,7 +166,7 @@ namespace MusicStore.Models
         }
 
         // We're using HttpContextBase to allow access to sessions.
-        private static string GetCartId(HttpContext context)
+        public static string GetCartId(HttpContext context)
         {
             var cartId = context.Session.GetString("Session");
 

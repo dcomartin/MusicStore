@@ -44,6 +44,7 @@
     }
   },
   "dependencies": {
+    "MediatR": "2.1.0",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.1.0-*",
     "Microsoft.AspNetCore.Authentication.Facebook": "1.1.0-*",
     "Microsoft.AspNetCore.Authentication.Google": "1.1.0-*",

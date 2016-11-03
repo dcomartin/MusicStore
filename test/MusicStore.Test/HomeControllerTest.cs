@@ -53,7 +53,7 @@ namespace MusicStore.Controllers
             PopulateData(dbContext);
 
             // Action
-            var result = await controller.Index(dbContext, cache);
+            var result = await controller.Index();
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
