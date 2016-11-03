@@ -1,10 +1,6 @@
-# MusicStore application
+# Fat Controller CQRS Diet: MusicStore application
 
-AppVeyor: [![AppVeyor](https://ci.appveyor.com/api/projects/status/ja8a7j6jscj7k3xa/branch/dev?svg=true)](https://ci.appveyor.com/project/aspnetci/MusicStore/branch/dev)
-
-Travis:   [![Travis](https://travis-ci.org/aspnet/MusicStore.svg?branch=dev)](https://travis-ci.org/aspnet/MusicStore)
-
-This project is part of ASP.NET Core. You can find samples, documentation and getting started instructions for ASP.NET Core at the [Home](https://github.com/aspnet/home) repo.
+This a fork of the aspnet MusicStore demo application.  It's rewritten to use the MediatR library using CQRS to thin your controllers and organize your code by features.
 
 ## Run the application on Helios:
 * If you have Visual Studio 2015
