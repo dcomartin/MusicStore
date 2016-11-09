@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MusicStore.Features.ShoppingCart;
 using MusicStore.Models;
 using MusicStore.ViewModels;
 
@@ -12,11 +14,13 @@ namespace MusicStore.Controllers
     public class ShoppingCartController : Controller
     {
         private readonly ILogger<ShoppingCartController> _logger;
+        private readonly IMediator _mediator;
 
-        public ShoppingCartController(MusicStoreContext dbContext, ILogger<ShoppingCartController> logger)
+        public ShoppingCartController(MusicStoreContext dbContext, ILogger<ShoppingCartController> logger, IMediator mediator)
         {
             DbContext = dbContext;
             _logger = logger;
+            _mediator = mediator;
         }
 
         public MusicStoreContext DbContext { get; }
@@ -43,17 +47,8 @@ namespace MusicStore.Controllers
 
         public async Task<IActionResult> AddToCart(int id, CancellationToken requestAborted)
         {
-            // Retrieve the album from the database
-            var addedAlbum = await DbContext.Albums
-                .SingleAsync(album => album.AlbumId == id);
-
-            // Add it to the shopping cart
-            var cart = ShoppingCart.GetCart(DbContext, HttpContext);
-
-            await cart.AddToCart(addedAlbum);
-
-            await DbContext.SaveChangesAsync(requestAborted);
-            _logger.LogInformation("Album {albumId} was added to the cart.", addedAlbum.AlbumId);
+            var cartId = ShoppingCart.GetCartId(HttpContext);
+            await _mediator.SendAsync(new AddToCart(cartId, id), requestAborted);
 
             // Go back to the main store page for more shopping
             return RedirectToAction("Index");
