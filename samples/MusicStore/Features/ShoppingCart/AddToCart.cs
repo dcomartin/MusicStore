@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MusicStore.Controllers;
 using MusicStore.Models;
 
 namespace MusicStore.Features.ShoppingCart
@@ -23,12 +22,10 @@ namespace MusicStore.Features.ShoppingCart
     public class AddToCartHandler : ICancellableAsyncRequestHandler<AddToCart, Unit>
     {
         private readonly MusicStoreContext _dbContext;
-        private readonly ILogger<ShoppingCartController> _logger;
 
-        public AddToCartHandler(MusicStoreContext dbContext, ILogger<ShoppingCartController> logger)
+        public AddToCartHandler(MusicStoreContext dbContext)
         {
             _dbContext = dbContext;
-            _logger = logger;
         }
 
         public async Task<Unit> Handle(AddToCart message, CancellationToken cancellationToken)
@@ -43,9 +40,23 @@ namespace MusicStore.Features.ShoppingCart
             await cart.AddToCart(addedAlbum);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-            _logger.LogInformation("Album {albumId} was added to the cart.", addedAlbum.AlbumId);
-
+            
             return Unit.Value;
+        }
+    }
+
+    public class AddToCartLogHandler : IPostRequestHandler<AddToCart, Unit>
+    {
+        private readonly ILogger<AddToCart> _logger;
+
+        public AddToCartLogHandler(ILogger<AddToCart> logger)
+        {
+            _logger = logger;
+        }
+
+        public void Handle(AddToCart request, Unit response)
+        {
+            _logger.LogInformation("Album {albumId} was added to the cart.", request.AlbumId);
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using MusicStore.Features;
 using MusicStore.Models;
 using MusicStore.ViewModels;
 using System.Reflection;
+using StructureMap;
 
 namespace MusicStore
 {
@@ -35,7 +38,7 @@ namespace MusicStore
 
         public IConfiguration Configuration { get; private set; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
@@ -60,7 +63,7 @@ namespace MusicStore
                     .AddDefaultTokenProviders();
 
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
-
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
@@ -94,6 +97,22 @@ namespace MusicStore
                         authBuilder.RequireClaim("ManageStore", "Allowed");
                     });
             });
+
+            var container = new Container();
+            container.Configure(cfg =>
+            {
+                cfg.Scan(scanner =>
+                {
+                    scanner.WithDefaultConventions();
+                    scanner.TheCallingAssembly();
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IPostRequestHandler<,>));
+                });
+
+                cfg.For(typeof(ICancellableAsyncRequestHandler<,>)).DecorateAllWith(typeof(Pipeline<,>));
+                cfg.Populate(services);
+            });
+
+            return container.GetInstance<IServiceProvider>();
         }
 
         //This method is invoked when ASPNETCORE_ENVIRONMENT is 'Development' or is not defined
