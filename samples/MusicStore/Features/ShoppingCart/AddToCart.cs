@@ -21,10 +21,12 @@ namespace MusicStore.Features.ShoppingCart
 
     public class AddToCartHandler : ICancellableAsyncRequestHandler<AddToCart, Unit>
     {
+        private readonly IMediator _mediator;
         private readonly MusicStoreContext _dbContext;
 
-        public AddToCartHandler(MusicStoreContext dbContext)
+        public AddToCartHandler(IMediator mediator, MusicStoreContext dbContext)
         {
+            _mediator = mediator;
             _dbContext = dbContext;
         }
 
@@ -40,8 +42,35 @@ namespace MusicStore.Features.ShoppingCart
             await cart.AddToCart(addedAlbum);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-            
+
+            _mediator.Publish(new AlbumAddedToCart(addedAlbum.AlbumId));
+
             return Unit.Value;
+        }
+    }
+
+    public class AlbumAddedToCart : INotification
+    {
+        public int AlbumId { get; }
+
+        public AlbumAddedToCart(int albumId)
+        {
+            AlbumId = albumId;
+        }
+    }
+
+    public class AlbumAddedToCartHandler : INotificationHandler<AlbumAddedToCart>
+    {
+        private readonly ILogger<AddToCart> _logger;
+
+        public AlbumAddedToCartHandler(ILogger<AddToCart> logger)
+        {
+            _logger = logger;
+        }
+
+        public void Handle(AlbumAddedToCart notification)
+        {
+            _logger.LogInformation("Album {albumId} was added to the cart.", notification.AlbumId);
         }
     }
 

@@ -44,7 +44,6 @@ namespace MusicStore.Controllers
 
         //
         // GET: /ShoppingCart/AddToCart/5
-
         public async Task<IActionResult> AddToCart(int id, CancellationToken requestAborted)
         {
             var cartId = ShoppingCart.GetCartId(HttpContext);
