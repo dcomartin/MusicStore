@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,23 @@ using MusicStore.Models;
 
 namespace MusicStore.Features
 {
+    public class HomeController : Controller
+    {
+        private readonly IMediator _mediator;
+
+        public HomeController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpGet("/")]
+        public async Task<IActionResult> Home()
+        {
+            var viewModel = await _mediator.SendAsync(new Home());
+            return View(viewModel);
+        }
+    }
+
     public class Home : IAsyncRequest<List<Album>> { }
 
     public class HomeHandler : IAsyncRequestHandler<Home, List<Album>>

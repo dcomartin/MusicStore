@@ -42,16 +42,7 @@ namespace MusicStore.Controllers
             return View(viewModel);
         }
 
-        //
-        // GET: /ShoppingCart/AddToCart/5
-        public async Task<IActionResult> AddToCart(int id, CancellationToken requestAborted)
-        {
-            var cartId = ShoppingCart.GetCartId(HttpContext);
-            await _mediator.SendAsync(new AddToCart(cartId, id), requestAborted);
-
-            // Go back to the main store page for more shopping
-            return RedirectToAction("Index");
-        }
+        
 
         //
         // AJAX: /ShoppingCart/RemoveFromCart/5

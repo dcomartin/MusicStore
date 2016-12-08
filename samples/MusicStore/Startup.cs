@@ -13,6 +13,7 @@ using MusicStore.Features;
 using MusicStore.Models;
 using MusicStore.ViewModels;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Razor;
 using StructureMap;
 
 namespace MusicStore
@@ -96,6 +97,11 @@ namespace MusicStore
                     {
                         authBuilder.RequireClaim("ManageStore", "Allowed");
                     });
+            });
+
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new FeaturesViewLocator());
             });
 
             var container = new Container();

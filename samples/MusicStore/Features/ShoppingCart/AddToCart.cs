@@ -1,12 +1,34 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MusicStore.Models;
 
 namespace MusicStore.Features.ShoppingCart
 {
+
+    public class AddToCartController : Controller
+    {
+        private readonly IMediator _mediator;
+
+        public AddToCartController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpGet("/ShoppingCart/AddToCart/{id:int}")]
+        public async Task<IActionResult> AddToCart(int id, CancellationToken requestAborted)
+        {
+            var cartId = Models.ShoppingCart.GetCartId(HttpContext);
+            await _mediator.SendAsync(new AddToCart(cartId, id), requestAborted);
+
+            // Go back to the main store page for more shopping
+            return RedirectToAction("Index", "ShoppingCart");
+        }
+    }
+
     public class AddToCart : ICancellableAsyncRequest<Unit>
     {
         public string CartId { get; }
@@ -73,19 +95,5 @@ namespace MusicStore.Features.ShoppingCart
             _logger.LogInformation("Album {albumId} was added to the cart.", notification.AlbumId);
         }
     }
-
-    public class AddToCartLogHandler : IPostRequestHandler<AddToCart, Unit>
-    {
-        private readonly ILogger<AddToCart> _logger;
-
-        public AddToCartLogHandler(ILogger<AddToCart> logger)
-        {
-            _logger = logger;
-        }
-
-        public void Handle(AddToCart request, Unit response)
-        {
-            _logger.LogInformation("Album {albumId} was added to the cart.", request.AlbumId);
-        }
-    }
 }
+
